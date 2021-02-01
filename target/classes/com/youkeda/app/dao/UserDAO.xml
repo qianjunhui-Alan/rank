@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.youkeda.app.dao.UserDAO">
+    <resultMap id="BaseResultMap" type="com.youkeda.app.dataobject.UserDO">
+        <id column="id" jdbcType="BIGINT" property="id"/>
+        <result column="mobile" jdbcType="VARCHAR" property="mobile"/>
+        <result column="nickname" jdbcType="VARCHAR" property="nickname"/>
+        <result column="avatar" jdbcType="VARCHAR" property="avatar"/>
+        <result column="valid" jdbcType="INTEGER" property="valid"/>
+        <result column="gmt_created" jdbcType="TIMESTAMP" property="gmtCreated"/>
+        <result column="gmt_modified" jdbcType="TIMESTAMP" property="gmtModified"/>
+    </resultMap>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+        delete from user
+        where id = #{id,jdbcType=BIGINT}
+    </delete>
+
+    <insert id="insert" parameterType="com.youkeda.app.dataobject.UserDO" useGeneratedKeys="true" keyProperty="id">
+        insert into user (mobile, nickname, avatar,valid,
+                          gmt_created, gmt_modified
+        )
+        values ( #{mobile,jdbcType=VARCHAR}, #{nickname,jdbcType=VARCHAR},
+                 #{avatar,jdbcType=VARCHAR},#{valid,jdbcType=INTEGER},
+                 now(), now())
+    </insert>
+
+    <insert id="batchInsert" parameterType="java.util.List">
+        insert into user ( mobile, nickname, avatar,valid, gmt_created, gmt_modified
+        )
+        values
+        <foreach collection="userDOS" item="item" separator=",">
+            ( #{item.mobile,jdbcType=VARCHAR}, #{item.nickname,jdbcType=VARCHAR},
+            #{item.avatar,jdbcType=VARCHAR},
+            #{item.valid,jdbcType=INTEGER},
+            now(), now())
+        </foreach>
+    </insert>
+
+    <select id="selectAll" resultMap="BaseResultMap">
+        select id, mobile, nickname, avatar, valid,gmt_created, gmt_modified
+        from user
+    </select>
+
+    <select id="queryByIds" parameterType="java.util.List" resultMap="BaseResultMap">
+        select id, mobile, nickname, avatar, valid,gmt_created, gmt_modified
+        from user
+        <where>
+            <if test="userDOIds !=null and userDOIds.size() &gt; 0">
+                and id in
+                <foreach close=")" collection="userDOIds" item="item" open="(" separator=",">
+                    #{item}
+                </foreach>
+            </if>
+
+            and valid = 1
+        </where>
+    </select>
+
+    <update id="updateByPrimaryKey" parameterType="com.youkeda.app.dataobject.UserDO">
+        update user
+        set gmt_modified = now(),
+        <if test="mobile != null and mobile != '' ">
+            mobile = #{mobile,jdbcType=VARCHAR},
+        </if>
+
+        <if test="nickname != null and nickname != '' ">
+            nickname = #{nickname,jdbcType=VARCHAR},
+        </if>
+
+        <if test="avatar != null and avatar != '' ">
+            avatar = #{avatar,jdbcType=VARCHAR},
+        </if>
+
+        <if test="valid != null">
+            valid = #{valid,jdbcType=INTEGER}
+        </if>
+
+        where id = #{id,jdbcType=BIGINT}
+    </update>
+
+    <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+        select id, mobile, nickname, avatar,valid, gmt_created, gmt_modified
+        from user
+        where id = #{id,jdbcType=BIGINT} and valid = 1
+    </select>
+
+
+</mapper>

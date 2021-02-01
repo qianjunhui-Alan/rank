@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.youkeda.app.dao.MatchDataDAO">
+    <resultMap id="BaseResultMap" type="com.youkeda.app.dataobject.MatchDataDO">
+        <id column="id" jdbcType="BIGINT" property="id"/>
+        <result column="user_id" jdbcType="BIGINT" property="userId"/>
+        <result column="kill" jdbcType="INTEGER" property="kill"/>
+        <result column="assists" jdbcType="INTEGER" property="assists"/>
+        <result column="damage" jdbcType="INTEGER" property="damage"/>
+        <result column="existence" jdbcType="INTEGER" property="existence"/>
+        <result column="treatment" jdbcType="INTEGER" property="treatment"/>
+        <result column="rescue" jdbcType="INTEGER" property="rescue"/>
+        <result column="score" jdbcType="DOUBLE" property="score"/>
+        <result column="rank" jdbcType="INTEGER" property="rank"/>
+        <result column="current_points" jdbcType="INTEGER" property="currentPoints"/>
+        <result column="modified_points" jdbcType="INTEGER" property="modifiedPoints"/>
+        <result column="gmt_created" jdbcType="TIMESTAMP" property="gmtCreated"/>
+        <result column="gmt_modified" jdbcType="TIMESTAMP" property="gmtModified"/>
+    </resultMap>
+
+    <delete id="deleteByUserId" parameterType="java.lang.Long">
+        delete from match_data
+        where user_id = #{userId,jdbcType=BIGINT}
+    </delete>
+
+    <insert id="insert" parameterType="com.youkeda.app.dataobject.MatchDataDO">
+      insert into match_data (user_id, `kill`,
+        assists, damage, existence,
+        treatment, rescue, score,
+        `rank`, current_points, modified_points,
+        gmt_created, gmt_modified)
+      values (#{userId,jdbcType=BIGINT}, #{kill,jdbcType=INTEGER},
+        #{assists,jdbcType=INTEGER}, #{damage,jdbcType=INTEGER}, #{existence,jdbcType=INTEGER},
+        #{treatment,jdbcType=INTEGER}, #{rescue,jdbcType=INTEGER}, #{score,jdbcType=DOUBLE},
+        #{rank,jdbcType=INTEGER}, #{currentPoints,jdbcType=INTEGER}, #{modifiedPoints,jdbcType=INTEGER},
+        now(), now())
+    </insert>
+
+</mapper>

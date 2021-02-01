@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="DataSourceManagerImpl" format="xml" multifile-model="true">
+    <data-source source="LOCAL" name="xiaoqiandb@rm-bp1jr61inl8c21ts8wo.mysql.rds.aliyuncs.com" uuid="119c3a70-6383-4639-94e9-7be5af34c050">
+      <driver-ref>mysql.8</driver-ref>
+      <synchronize>true</synchronize>
+      <jdbc-driver>com.mysql.cj.jdbc.Driver</jdbc-driver>
+      <jdbc-url>jdbc:mysql://rm-bp1jr61inl8c21ts8wo.mysql.rds.aliyuncs.com:3306/xiaoqiandb</jdbc-url>
+    </data-source>
+  </component>
+</project>

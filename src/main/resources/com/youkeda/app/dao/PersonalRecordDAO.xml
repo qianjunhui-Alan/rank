@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.youkeda.app.dao.PersonalRecordDAO">
+    <resultMap id="BaseResultMap" type="com.youkeda.app.dataobject.PersonalRecordDO">
+        <id column="id" jdbcType="BIGINT" property="id"/>
+        <result column="user_id" jdbcType="BIGINT" property="userId"/>
+        <result column="points" jdbcType="INTEGER" property="points"/>
+        <result column="play_num" jdbcType="INTEGER" property="playNum"/>
+        <result column="win_times" jdbcType="INTEGER" property="winTimes"/>
+        <result column="top_ten_times" jdbcType="INTEGER" property="topTenTimes"/>
+        <result column="kd" jdbcType="DOUBLE" property="kd"/>
+        <result column="eliminate_num" jdbcType="INTEGER" property="eliminateNum"/>
+        <result column="gmt_created" jdbcType="TIMESTAMP" property="gmtCreated"/>
+        <result column="gmt_modified" jdbcType="TIMESTAMP" property="gmtModified"/>
+    </resultMap>
+
+    <delete id="deleteByUserId" parameterType="java.lang.Long">
+      delete from personal_record
+      where user_id = #{userId,jdbcType=BIGINT}
+    </delete>
+    <insert id="insert" parameterType="com.youkeda.app.dataobject.PersonalRecordDO">
+      insert into personal_record ( user_id,points, play_num,
+      win_times, top_ten_times, kd,
+      eliminate_num, gmt_created, gmt_modified
+      )
+      values (#{userId,jdbcType=BIGINT}, #{points,jdbcType=INTEGER}, #{playNum,jdbcType=INTEGER},
+      #{winTimes,jdbcType=INTEGER}, #{topTenTimes,jdbcType=INTEGER}, #{kd,jdbcType=DOUBLE},
+      #{eliminateNum,jdbcType=INTEGER}, now(), now()
+      )
+    </insert>
+
+    <update id="updateByPrimaryKey" parameterType="com.youkeda.app.dataobject.PersonalRecordDO">
+        update personal_record
+        <set>
+            gmt_modified = now(),
+            <if test="userId != null">
+                user_id = #{userId,jdbcType=BIGINT},
+            </if>
+
+            <if test="points != null">
+                points = #{points,jdbcType=INTEGER},
+            </if>
+
+            <if test="playNum != null">
+                play_num = #{playNum,jdbcType=INTEGER},
+            </if>
+
+            <if test="winTimes != null">
+                win_times = #{winTimes,jdbcType=INTEGER},
+            </if>
+
+            <if test="topTenTimes != null">
+                top_ten_times = #{topTenTimes,jdbcType=INTEGER},
+            </if>
+
+            <if test="kd != null">
+                kd = #{kd,jdbcType=DOUBLE},
+            </if>
+
+            <if test="eliminateNum != null">
+                eliminate_num = #{eliminateNum,jdbcType=DOUBLE},
+            </if>
+
+        </set>
+        where id = #{id,jdbcType=BIGINT}
+    </update>
+    <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+      select id,user_id, points, play_num, win_times, top_ten_times, kd, eliminate_num, gmt_created,
+      gmt_modified
+      from personal_record
+      where id = #{id,jdbcType=BIGINT}
+    </select>
+
+    <select id="queryLimit" parameterType="java.lang.Long" resultMap="BaseResultMap">
+        select * from personal_record order by points desc
+        <if test="num != null">
+            limit #{num}
+        </if>
+    </select>
+
+    <select id="getRankIndex" parameterType="java.lang.Long" resultType="java.lang.Long">
+        select b.rownum from
+(select t.* , @rownum := @rownum + 1 as rownum from (select @rownum := 0) r ,(select *from personal_record order by points desc) t) b
+where user_id = #{userId}
+    </select>
+
+
+</mapper>
